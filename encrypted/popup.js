@@ -7,14 +7,18 @@ function set(text, cls, id) {
 }
 
 function loadSettings() {
-  chrome.runtime.sendMessage({ type: "getSettings" }, ({ settings }) => {
-    document.getElementById("pasteGuard").checked = !!settings.pasteGuard;
-    document.getElementById("copyGuard").checked = !!settings.copyGuard;
-    document.getElementById("sendGuard").checked = !!settings.sendGuard;
+  chrome.runtime.sendMessage({ type: "getSettings" }, (resp) => {
+    if (resp && resp.settings) {
+      document.getElementById("pasteGuard").checked = !!resp.settings.pasteGuard;
+      document.getElementById("copyGuard").checked = !!resp.settings.copyGuard;
+      document.getElementById("sendGuard").checked = !!resp.settings.sendGuard;
+    }
   });
-  chrome.runtime.sendMessage({ type: "status" }, ({ unlocked }) => {
-    document.getElementById("ustat").textContent = unlocked ? "Unlocked" : "Locked";
-    document.getElementById("ustat").className = "status " + (unlocked ? "ok":"err");
+  chrome.runtime.sendMessage({ type: "status" }, (resp) => {
+    if (resp && resp.unlocked !== undefined) {
+      document.getElementById("ustat").textContent = resp.unlocked ? "Unlocked" : "Locked";
+      document.getElementById("ustat").className = "status " + (resp.unlocked ? "ok":"err");
+    }
   });
 }
 
