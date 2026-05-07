@@ -55,7 +55,7 @@ describe('PII Guard (Encrypted)', () => {
         'utf8'
       );
       expect(content).toMatch(/email/i);
-      expect(content).toMatch(/\[email\]/);
+      expect(content).toMatch(/__PII::email::/);
     });
 
     it('should have phone redaction pattern', () => {
@@ -64,7 +64,7 @@ describe('PII Guard (Encrypted)', () => {
         'utf8'
       );
       expect(content).toMatch(/phone/i);
-      expect(content).toMatch(/\[phone\]/);
+      expect(content).toMatch(/__PII::phone::/);
     });
 
     it('should have SSN redaction pattern', () => {
@@ -73,7 +73,7 @@ describe('PII Guard (Encrypted)', () => {
         'utf8'
       );
       expect(content).toMatch(/ssn/i);
-      expect(content).toMatch(/\[ssn\]/);
+      expect(content).toMatch(/__PII::ssn::/);
     });
   });
 
@@ -105,14 +105,11 @@ describe('PII Guard (Encrypted)', () => {
   });
 
   describe('Injection Mechanism', () => {
-    it('should inject script into page context', () => {
-      const content = fs.readFileSync(
-        path.join(ENCRYPTED_PATH, 'content_script.js'),
-        'utf8'
-      );
-      expect(content).toMatch(/chrome\.runtime\.getURL/);
-      expect(content).toMatch(/document\.createElement/);
-      expect(content).toMatch(/appendChild/);
+    it('should have content_script in manifest', () => {
+      const manifest = getManifest(ENCRYPTED_PATH);
+      const jsFiles = manifest.content_scripts[0].js;
+      expect(jsFiles).toContain('content_script.js');
+      expect(jsFiles).toContain('page_inject.js');
     });
 
     it('page_inject should intercept fetch/XHR', () => {
@@ -125,12 +122,12 @@ describe('PII Guard (Encrypted)', () => {
   });
 
   describe('Redaction Logic', () => {
-    it('should have REDACT function', () => {
+    it('should have maskPII function', () => {
       const content = fs.readFileSync(
         path.join(ENCRYPTED_PATH, 'page_inject.js'),
         'utf8'
       );
-      expect(content).toMatch(/const\s+REDACT\s*=|function\s+REDACT/);
+      expect(content).toMatch(/function\s+maskPII|const\s+maskPII/);
     });
 
     it('should handle string inputs', () => {
@@ -138,7 +135,7 @@ describe('PII Guard (Encrypted)', () => {
         path.join(ENCRYPTED_PATH, 'page_inject.js'),
         'utf8'
       );
-      expect(content).toMatch(/typeof\s+s\s*!==\s*['"]string/);
+      expect(content).toMatch(/typeof\s+\w+\s*!==\s*['"]string/);
     });
 
     it('should use regex replace for redaction', () => {

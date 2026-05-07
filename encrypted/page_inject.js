@@ -5,7 +5,8 @@
 
   // Simple PII replacement functions (tweak patterns as needed)
   const RE_EMAIL = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
-  const RE_US_PHONE = /(\+?1[\s-.]?)?\(?\d{3}\)?[\s-.]?\d{3}[\s-.]?\d{4}/g;
+  // Phone: supports +1-800-555-1234, (800) 555-1234, 800.555.1234, 800 555 1234, etc.
+  const RE_US_PHONE = /(\+?1[\s-.]?)?(\(?\d{3}\)?[\s-.]?\d{3}[\s-.]?\d{4}|\d{3}[\s-.]?\d{4})/g;
   const RE_SSN = /\b\d{3}-\d{2}-\d{4}\b/g;
   // very simple address-ish match: "Number + word + (St|Street|Ave|Avenue|Rd|Road|Terrace|Blvd)"
   const RE_SIMPLE_ADDR = /\b\d{1,6}\s+[A-Za-z0-9 .,#'\-]{2,60}\b(?:St(?:reet)?|Ave(?:nue)?|Rd|Road|Terrace|Blvd|Lane|Ln)\b/gi;
@@ -38,6 +39,13 @@
       // Build a Request object we can inspect
       const req = new Request(input, init);
       const contentType = req.headers.get('content-type') || '';
+
+      // Skip certain request types that shouldn't be redacted
+      const urlStr = req.url.toString();
+      const skipPatterns = /\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?|$)|^data:/i;
+      if (skipPatterns.test(urlStr)) {
+        return origFetch(input, init);
+      }
 
       // Only attempt to modify text/json types — don't try to read binary
       if (req.method && req.method.toUpperCase() !== 'GET' && /json|text|plain|application\/x-www-form-urlencoded/.test(contentType)) {

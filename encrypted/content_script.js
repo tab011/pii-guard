@@ -32,11 +32,14 @@
     return map[hash] || null;
   }
 
-  // Same fast hash as page_inject.js
+  // FNV-1a hash matching page_inject.js
   function h(str) {
-    let x = 0;
-    for (let i = 0; i < str.length; i++) x = (x * 31 + str.charCodeAt(i)) | 0;
-    return ("00000000" + (x >>> 0).toString(16)).slice(-8);
+    let hash = 2166136261 >>> 0;
+    for (let i = 0; i < str.length; i++) {
+      hash ^= str.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(36);
   }
 
   // ----------------- token helpers
@@ -80,6 +83,18 @@
       (m) => tokenFor("phone", m)
     );
 
+    // SSN (Social Security Number)
+    str = str.replace(
+      /\b\d{3}-\d{2}-\d{4}\b/g,
+      (m) => tokenFor("ssn", m)
+    );
+
+    // Simple address pattern
+    str = str.replace(
+      /\b\d{1,6}\s+[A-Za-z0-9 .,#'\-]{2,60}\b(?:St(?:reet)?|Ave(?:nue)?|Rd|Road|Terrace|Blvd|Lane|Ln)\b/gi,
+      (m) => tokenFor("addr", m)
+    );
+
     // Windows DOMAIN\user
     str = str.replace(
       /\b([A-Z0-9][A-Z0-9.-]{0,14})\\([A-Za-z0-9._-]{1,20})\b/g,
@@ -95,15 +110,6 @@
     return str;
   }
 
-  const TOKEN_RE = /__PII::([a-z_]+)::([0-9a-f]{8})__/g;
-
-  function rehydrate(str) {
-    if (typeof str !== "string" || !str) return str;
-    return str.replace(TOKEN_RE, (full, _type, hex) => {
-      const original = lookup(hex);
-      return original || full; // if not found, leave token as-is
-    });
-  }
 
   // ----------------- bridge page <-> content script
   window.addEventListener("message", (ev) => {

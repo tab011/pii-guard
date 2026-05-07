@@ -23,5 +23,12 @@
   "bugs": {
     "url": "https://github.com/tab011/pii-guard/issues"
   },
-  "homepage": "https://github.com/tab011/pii-guard#readme"
+  "homepage": "https://github.com/tab011/pii-guard#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.29.5",
+    "babel-jest": "^30.3.0",
+    "jest": "^30.3.0",
+    "jest-puppeteer": "^11.0.0",
+    "puppeteer": "^24.43.0"
+  }
 }
