@@ -1,0 +1,27 @@
+{
+  "name": "pii-guard",
+  "version": "1.0.0",
+  "description": "Client-side privacy protection extensions for Chrome/Edge. Automatically redacts personally identifiable information (emails, phone numbers, SSNs) from outgoing requests.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "validate": "node scripts/validate.js",
+    "package": "node scripts/package.js",
+    "package:version": "node scripts/package.js $(npm run --silent version)",
+    "release": "npm run validate && npm run test && npm run package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tab011/pii-guard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tab011/pii-guard/issues"
+  },
+  "homepage": "https://github.com/tab011/pii-guard#readme"
+}
