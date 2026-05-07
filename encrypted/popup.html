@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body { font: 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 12px; width: 280px; }
+      label { display:block; margin: 8px 0; }
+      .row { display:flex; gap:8px; align-items:center; }
+      .status { margin-top: 8px; }
+      .ok { color: #0a0; } .err { color: #a00; }
+      fieldset { border:1px solid #ccc; border-radius:8px; padding:8px; margin-top:10px; }
+      legend { padding:0 6px; }
+      button { cursor:pointer; }
+      input[type=password], input[type=text] { width: 100%; box-sizing:border-box; }
+    </style>
+  </head>
+  <body>
+    <h3>PII Guard (Encrypted)</h3>
+    <fieldset>
+      <legend>Unlock</legend>
+      <div class="row">
+        <input id="pw" type="password" placeholder="Passphrase"/>
+        <button id="unlock">Unlock</button>
+        <button id="lock">Lock</button>
+      </div>
+      <div id="ustat" class="status"></div>
+    </fieldset>
+    <fieldset>
+      <legend>Guards</legend>
+      <label><input type="checkbox" id="pasteGuard"> Paste Guard (sanitize on paste)</label>
+      <label><input type="checkbox" id="copyGuard"> Copy Guard (sanitize on copy/cut)</label>
+      <label><input type="checkbox" id="sendGuard"> Send Guard (sanitize before send)</label>
+      <button id="save">Save</button>
+      <div id="sstat" class="status"></div>
+    </fieldset>
+    <p style="font-size:12px;color:#555;margin-top:10px">
+      Mapping is encrypted locally (AES-GCM). You must unlock each session.
+    </p>
+    <script src="popup.js"></script>
+  </body>
+</html>

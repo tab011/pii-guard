@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "PII Guard (Obfuscate)",
+  "version": "0.1.0",
+  "description": "Redacts sensitive strings in outgoing requests (FormData, fetch, XHR).",
+  "permissions": [],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["redact.js", "page_inject.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

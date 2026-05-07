@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "PII Guard (Tokenize + Paste-out Rehydrate)",
+  "version": "0.11.0",
+  "description": "Client-side redaction of hostnames, IPv4, emails, and usernames like ab12345; rehydrate on Copy.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*"
+      ],
+      "js": ["content_script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": { "default_title": "PII Guard" }
+}

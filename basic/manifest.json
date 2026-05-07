@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "PII Guard (Encrypted): ChatGPT Only",
+  "version": "0.9.2",
+  "description": "Client-side tokenization of PII/CUI for ChatGPT interactions only.",
+  "permissions": ["storage", "contextMenus"],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_popup": "popup.html" },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*"
+      ],
+      "js": ["content_script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": ["page_inject.js"],
+    "matches": [
+      "https://chat.openai.com/*",
+      "https://chatgpt.com/*"
+    ]
+  }]
+}

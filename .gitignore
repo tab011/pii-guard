@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# Chrome Extension Developer
+extension.crx
+.pem
+*.pem
+
+# Node (if any)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Sensitive data
+.env
+.env.local
+secrets.json
+credentials.json
+
+# OS
+Thumbs.db
+*.log
+
+# Temporary
+*.tmp
+*.temp
+/tmp/
