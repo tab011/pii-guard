@@ -131,7 +131,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     try {
       if (msg.type === "getSettings") {
         const { settings } = await chrome.storage.local.get("settings");
-        sendResponse({ settings });
+        sendResponse({ settings: settings || DEFAULT_SETTINGS });
         return;
       }
       if (msg.type === "setSettings") {

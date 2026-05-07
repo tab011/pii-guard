@@ -2,11 +2,9 @@
 // IMPORTANT: no chrome.* APIs in the sanitize/rehydrate path (avoids "Extension context invalidated")
 
 (function () {
-  // ---- tiny session-scoped store in page context via postMessage fence
-  // We keep the map in page's sessionStorage so a worker reload doesn't matter.
+  // ---- tiny session-scoped store in page context
   const NS = "__pii_guard_v1__";
 
-  // Use a hidden channel object on window to avoid name collisions.
   function getMap() {
     try {
       const raw = sessionStorage.getItem(NS);
